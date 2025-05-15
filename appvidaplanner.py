@@ -125,11 +125,11 @@ if st.button("Gerar Agenda"):
         json.dump(progresso, f)
 
     st.success(f"Agenda gerada para {dia_escolhido.capitalize()} 🎯")
-    st.subheader("✍️ Edite os itens da sua agenda:")
+    st.subheader("✍️ Edite os horários e compromissos do seu dia:")
 
     nova_agenda = []
     for i, item in enumerate(agenda):
-        novo_item = st.text_input(f"Item {i+1}", item)
+        novo_item = st.text_input(label=f"🕒 {item.split('|')[0].strip()} -", value=item)
         nova_agenda.append(novo_item)
 
     if st.button("✅ Aprovar e Salvar Agenda"):

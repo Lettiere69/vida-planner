@@ -37,8 +37,8 @@ else:
 
 # --- FUNÇÃO PARA ENVIAR WHATSAPP ---
 def enviar_agenda_whatsapp(agenda, telefone_destino):
-    account_sid = "AC0548c56e5b176f60a8d5e8b79377d1ee"
-    auth_token = "2e6af44567124efc45551c3e983620bf"
+    account_sid = "SEU_ACCOUNT_SID"
+    auth_token = "SEU_AUTH_TOKEN"
     client = Client(account_sid, auth_token)
 
     mensagem = "📋 *Sua agenda do dia:*\n\n"
@@ -53,14 +53,14 @@ def enviar_agenda_whatsapp(agenda, telefone_destino):
 
 # Controle de treino de corrida sequencial
 treinos_corrida = [
-    "Corrida leve 3km - foco em manter o pace abaixo de 6:30",
-    "Treino intervalado: 4x400m rápido + 200m caminhada",
-    "Rodagem 4km - respiração controlada",
-    "Progressivo 3km (aumentar o ritmo a cada km)",
-    "Longão 5km ritmo constante",
-    "Treino de tiros: 6x300m forte + 1min descanso",
-    "Corrida leve 3.5km - foco em postura",
-    "Rodagem 5km - simulação leve de prova"
+    "Corrida leve 3km - aquecimento de 5 min andando + corrida leve focando na respiração. Tente manter pace abaixo de 6:30.",
+    "Intervalado: aquecimento 5 min leve + 4x400m em ritmo forte (80-85%) com 200m caminhada entre os tiros. Finalize com desaquecimento leve.",
+    "Rodagem contínua 4km - mantenha ritmo constante, foco na cadência e respiração diafragmática.",
+    "Treino progressivo 3km - inicie leve, aumente o ritmo a cada km. Último km em ritmo forte.",
+    "Longão 5km - mantenha ritmo confortável. Foco é resistência e constância. Não acelere muito.",
+    "Tiros curtos: aquecimento 1km + 6x300m com intensidade alta (quase sprint), 1min de descanso parado entre cada.",
+    "Corrida leve 3.5km - atenção na postura (tronco ereto, braços relaxados), ritmo controlado.",
+    "Rodagem 5km simulando prova - use o tênis que usaria em corrida oficial. Tente ritmo constante e superação leve."
 ]
 
 # Eventos fixos e personalizados
@@ -125,42 +125,14 @@ def gerar_agenda(dia, vai_correr):
     if dia in eventos_personalizados:
         agenda.extend(eventos_personalizados[dia])
 
-    return agenda
-
-# --- INTERFACE STREAMLIT ---
-st.markdown("""<h1 style='color:#4fc3f7;'>📅 VidaPlanner – Planejador Diário com IA</h1>""", unsafe_allow_html=True)
-
-col1, col2 = st.columns(2)
-with col1:
-    dia_escolhido = st.selectbox("Escolha o dia da semana:", dias_semana)
-with col2:
-    vai_correr = st.radio("Atividade principal hoje:", ["Correr", "Musculação"]) == "Correr"
-
-if st.button("Gerar Agenda"):
-    agenda = gerar_agenda(dia_escolhido, vai_correr)
     with open(arquivo_progresso, "w") as f:
         json.dump(progresso, f)
 
-    st.success(f"Agenda gerada para {dia_escolhido.capitalize()} 🎯")
-    st.subheader("✍️ Edite os horários e compromissos do seu dia:")
+    # Enviar WhatsApp após gerar agenda
+    try:
+        enviar_agenda_whatsapp(agenda, "+5586988248770")
+        st.success("📤 Agenda enviada para seu WhatsApp com sucesso!")
+    except Exception as e:
+        st.error(f"Erro ao enviar WhatsApp: {e}")
 
-    nova_agenda = []
-    for i, item in enumerate(agenda):
-        novo_item = st.text_input(label=f"🕒 {item.split('|')[0].strip()} -", value=item)
-        nova_agenda.append(novo_item)
-
-    if st.button("✅ Aprovar e Salvar Agenda"):
-        nome_arquivo = f"agenda_{dia_escolhido}.txt"
-        with open(nome_arquivo, "w", encoding="utf-8") as f:
-            f.write(f"Agenda para {dia_escolhido.capitalize()}\n")
-            f.write("="*30 + "\n")
-            for item in nova_agenda:
-                f.write(f"{item}\n")
-        st.success(f"Agenda salva como '{nome_arquivo}'")
-
-        # Envia por WhatsApp
-        try:
-            enviar_agenda_whatsapp(nova_agenda, "+5586988248770")
-            st.success("📤 Agenda enviada para seu WhatsApp com sucesso!")
-        except Exception as e:
-            st.error(f"Erro ao enviar WhatsApp: {e}")
+    return agenda

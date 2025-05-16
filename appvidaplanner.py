@@ -40,12 +40,9 @@ if st.session_state.acesso_liberado:
     import requests
 
     def enviar_agenda_telegram(agenda, chat_id, bot_token):
-        mensagem = "Sua agenda do dia: "
-
-
+        mensagem = "📅 Sua agenda do dia:\n\n"
         for item in agenda:
-            mensagem += f"• {item} "
-
+            mensagem += f"• {item}\n"
 
 
         url = f"https://api.telegram.org/bot{bot_token}/sendMessage"

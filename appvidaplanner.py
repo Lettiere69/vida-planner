@@ -44,8 +44,7 @@ if st.session_state.acesso_liberado:
 
         mensagem = "Sua agenda do dia:\n\n"
         for item in agenda:
-            mensagem += f"• {item}
-"
+            mensagem += f"• {item}\\n"
 
         message = client.messages.create(
             from_="whatsapp:+14155238886",

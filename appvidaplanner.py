@@ -42,15 +42,22 @@ if st.session_state.acesso_liberado:
         auth_token = "2e6af44567124efc45551c3e983620bf"
         client = Client(account_sid, auth_token)
 
-        mensagem = "📋 *Sua agenda do dia:*\n\n"
-        for item in agenda:
-            mensagem += f"• {item}\n"
+        mensagem = "📋 *Sua agenda do dia:*
 
-        client.messages.create(
+"
+
+"
+        for item in agenda:
+            mensagem += f"• {item}
+"
+"
+
+        message = client.messages.create(
             from_="whatsapp:+14155238886",
             to=f"whatsapp:{telefone_destino}",
             body=mensagem
         )
+        return message.sid
 
     # Controle de treino de corrida sequencial
     treinos_corrida = [
@@ -153,7 +160,8 @@ if st.session_state.acesso_liberado:
 
         if st.button("✅ Aprovar e Salvar Agenda"):
             try:
-                enviar_agenda_whatsapp(nova_agenda, "+5586988248770")
+                sid = enviar_agenda_whatsapp(nova_agenda, "+5586988248770")
+                st.code(f"SID da mensagem: {sid}", language="python")
                 st.success("📤 Agenda enviada para seu WhatsApp com sucesso!")
             except Exception as e:
                 st.error(f"Erro ao enviar WhatsApp: {e}")

@@ -45,7 +45,7 @@ if st.session_state.acesso_liberado:
 
         for item in agenda:
                     mensagem += f"• {item}\n"
-"
+
 
         url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
         payload = {

@@ -2,6 +2,7 @@ import datetime
 import streamlit as st
 import json
 import os
+from twilio.rest import Client
 
 # --- PROTEÇÃO POR SENHA COM MEMÓRIA DE SESSÃO ---
 st.set_page_config(page_title="VidaPlanner", layout="wide")
@@ -33,6 +34,22 @@ if os.path.exists(arquivo_progresso):
         progresso = json.load(f)
 else:
     progresso = {"treino_index": 0}
+
+# --- FUNÇÃO PARA ENVIAR WHATSAPP ---
+def enviar_agenda_whatsapp(agenda, telefone_destino):
+    account_sid = "AC0548c56e5b176f60a8d5e8b79377d1ee"
+    auth_token = "2e6af44567124efc45551c3e983620bf"
+    client = Client(account_sid, auth_token)
+
+    mensagem = "📋 *Sua agenda do dia:*\n\n"
+    for item in agenda:
+        mensagem += f"• {item}\n"
+
+    client.messages.create(
+        from_="whatsapp:+14155238886",
+        to=f"whatsapp:{telefone_destino}",
+        body=mensagem
+    )
 
 # Controle de treino de corrida sequencial
 treinos_corrida = [
@@ -140,3 +157,10 @@ if st.button("Gerar Agenda"):
             for item in nova_agenda:
                 f.write(f"{item}\n")
         st.success(f"Agenda salva como '{nome_arquivo}'")
+
+        # Envia por WhatsApp
+        try:
+            enviar_agenda_whatsapp(nova_agenda, "+5586988248770")
+            st.success("📤 Agenda enviada para seu WhatsApp com sucesso!")
+        except Exception as e:
+            st.error(f"Erro ao enviar WhatsApp: {e}")

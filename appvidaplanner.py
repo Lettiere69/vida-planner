@@ -16,8 +16,7 @@ if not st.session_state.acesso_liberado:
     senha_correta = "vidaplanner2024"
     if senha == senha_correta:
         st.session_state.acesso_liberado = True
-        st.success("Acesso liberado. Recarregue a página (F5) para continuar.")
-        st.stop()
+        st.rerun()
     else:
         st.warning("Acesso negado. Digite a senha correta.")
         st.stop()

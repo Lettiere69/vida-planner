@@ -36,22 +36,25 @@ if st.session_state.acesso_liberado:
     else:
         progresso = {"treino_index": 0}
 
-    # --- FUNÇÃO PARA ENVIAR WHATSAPP ---
-    def enviar_agenda_whatsapp(agenda, telefone_destino):
-        account_sid = "AC0548c56e5b176f60a8d5e8b79377d1ee"
-        auth_token = "2e6af44567124efc45551c3e983620bf"
-        client = Client(account_sid, auth_token)
+    # --- FUNÇÃO PARA ENVIAR TELEGRAM ---
+    import requests
 
-        mensagem = "Sua agenda do dia:\n\n"
+    def enviar_agenda_telegram(agenda, chat_id, bot_token):
+        mensagem = "🗓️ *Sua agenda do dia:*
+
+"
         for item in agenda:
-            mensagem += f"• {item}\\n"
+            mensagem += f"• {item}
+"
 
-        message = client.messages.create(
-            from_="whatsapp:+14155238886",
-            to=f"whatsapp:{telefone_destino}",
-            body=mensagem
-        )
-        return message.sid
+        url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+        payload = {
+            "chat_id": chat_id,
+            "text": mensagem,
+            "parse_mode": "Markdown"
+        }
+        response = requests.post(url, data=payload)
+        return response.status_code
 
     # Controle de treino de corrida sequencial
     treinos_corrida = [
@@ -154,9 +157,9 @@ if st.session_state.acesso_liberado:
 
         if st.button("✅ Aprovar e Salvar Agenda"):
             try:
-                sid = enviar_agenda_whatsapp(nova_agenda, "+5586988248770")
-                st.code(f"SID da mensagem: {sid}", language="python")
-                st.success("📤 Agenda enviada para seu WhatsApp com sucesso!")
+                status = enviar_agenda_telegram(nova_agenda, "1319899315", "8135085475:AAGAudrF5VpQHAXvA9bqy2n8mzkHXxnwCzs")
+                st.info(f"Status do envio: {status}")
+                st.success("📤 Agenda enviada para seu Telegram com sucesso!")
             except Exception as e:
                 st.error(f"Erro ao enviar WhatsApp: {e}")
             nome_arquivo = f"agenda_{dia_escolhido}.txt"

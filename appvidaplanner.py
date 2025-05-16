@@ -40,20 +40,20 @@ if st.session_state.acesso_liberado:
     import requests
 
     def enviar_agenda_telegram(agenda, chat_id, bot_token):
-        mensagem = "Sua agenda do dia:\n\n"
+        mensagem = "Sua agenda do dia:
+
+"
         for item in agenda:
-                                mensagem += f"• {item}\n"
-
-
+            mensagem += f"• {item}
+"
 
         url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
         payload = {
             "chat_id": chat_id,
-            "text": mensagem,
-            "parse_mode": "Markdown"
+            "text": mensagem
         }
         response = requests.post(url, data=payload)
-        return response.status_code
+        return response
 
     # Controle de treino de corrida sequencial
     treinos_corrida = [
@@ -156,8 +156,8 @@ if st.session_state.acesso_liberado:
 
         if st.button("✅ Aprovar e Salvar Agenda"):
             try:
-                status = enviar_agenda_telegram(nova_agenda, "1319899315", "8135085475:AAGAudrF5VpQHAXvA9bqy2n8mzkHXxnwCzs")
-                st.info(f"Status do envio: {status}")
+                response = enviar_agenda_telegram(nova_agenda, "1319899315", "8135085475:AAGAudrF5VpQHAXvA9bqy2n8mzkHXxnwCzs")
+                st.code(response.text)
                 st.success("📤 Agenda enviada para seu Telegram com sucesso!")
             except Exception as e:
                 st.error(f"Erro ao enviar WhatsApp: {e}")

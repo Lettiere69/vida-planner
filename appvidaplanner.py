@@ -44,7 +44,7 @@ if st.session_state.acesso_liberado:
 
         mensagem = "Sua agenda do dia:\n\n"
         for item in agenda:
-            mensagem += f"• {item}\n"
+            mensagem += f"• {item}
 "
 
         message = client.messages.create(

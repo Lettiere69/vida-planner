@@ -42,7 +42,7 @@ if st.session_state.acesso_liberado:
     def enviar_agenda_telegram(agenda, chat_id, bot_token):
         mensagem = "Sua agenda do dia:\n\n"
 
-"
+
         for item in agenda:
                     mensagem += f"• {item}\n"
 "

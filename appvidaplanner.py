@@ -42,11 +42,9 @@ if st.session_state.acesso_liberado:
         auth_token = "2e6af44567124efc45551c3e983620bf"
         client = Client(account_sid, auth_token)
 
-        mensagem = "Sua agenda do dia:
-
-"
+        mensagem = "Sua agenda do dia:\n\n"
         for item in agenda:
-            mensagem += f"• {item}
+            mensagem += f"• {item}\n"
 "
 
         message = client.messages.create(
